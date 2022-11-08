@@ -44,3 +44,19 @@ class Option:
             print("Wrong option type")
             return None
 
+    def calcVola(self, S, time, price, rate=0):
+        #calcs implied vola from markt price
+        vola_hi = 0.4
+        while self.calcPrice(S,vola_hi,time,rate)<price:
+            vola_hi *= 2
+        vola_low = vola_hi / 2
+        while abs(vola_hi-vola_low) > 0.0001:
+            vola = 0.5 * (vola_low + vola_hi)
+            price_updated = self.calcPrice(S,time,vola,rate)
+            if price_updated < price:
+                vola_low = vola
+            else:
+                vola_hi = vola
+
+        return vola
+

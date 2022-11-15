@@ -47,7 +47,9 @@ class Option:
     def calcVola(self, S, time, price, rate=0):
         #calcs implied vola from markt price
         vola_hi = 0.4
+        vola_low = 0
         while self.calcPrice(S,vola_hi,time,rate)<price:
+            vola_low = vola_hi
             vola_hi *= 2
         vola_low = vola_hi / 2
         while abs(vola_hi-vola_low) > 0.0001:
@@ -89,3 +91,4 @@ class GBrown:
         dt=T/N
         X=np.exp((mu-sigma**2/2)*dt+sigma*np.random.normal(0,np.sqrt(dt),N))
         return S0*np.cumprod(X)
+

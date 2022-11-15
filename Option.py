@@ -51,7 +51,6 @@ class Option:
         while self.calcPrice(S,vola_hi,time,rate)<price:
             vola_low = vola_hi
             vola_hi *= 2
-        vola_low = vola_hi / 2
         while abs(vola_hi-vola_low) > 0.0001:
             vola = 0.5 * (vola_low + vola_hi)
             price_updated = self.calcPrice(S,time,vola,rate)

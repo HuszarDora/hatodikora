@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import scipy as sp
+
 # MPT Modern Portfolio Theory
 # '52 részvények
 # sure bet- biztos tipp
@@ -102,10 +103,9 @@ plt.show()
 
 # 4.feladat optimalizáció
 return_target = 0.2
-cons = ({'type' : 'eq', 'fun': lambda weight: return_target - calc_nasset_mean(weight,mean_asset)}, {'type' : 'eq', 'fun': lambda weight: np.sum(weight)-1}))
+cons = ({'type' : 'eq', 'fun': lambda weight: return_target - calc_nasset_mean(weight,mean_asset)}, {'type' : 'eq', 'fun': lambda weight: np.sum(weight)-1})
+res = sp.optimize.minimize(calc_nasset_std, np.array([1,0,0,0,0]), args=(cov_asset), constraints=cons)
 
-sp.optimize.minimize(calc_nasset_std, np.array([1,0,0,0,0]), args=(cov_asset))
-
-
+eredmeny = res.x
 
 pass

@@ -40,6 +40,9 @@ date=df_.index[0]
 df_=df_[df_.last_date==date]
 df_.groupby(df_.strike).implied_vola_mid.median().plot()
 plt.show()
+
+
+
 # def calcVolaBid(row):
 #     opt = Option(row.cp_flag, row.strike, row.expiry, 1)
 #     if row

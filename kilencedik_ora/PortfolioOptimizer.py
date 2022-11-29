@@ -5,11 +5,12 @@ import seaborn as sns
 import scipy as sp
 
 class PortfolioOptimizer:
-    def __init__(self,asset_price_file_loc, rf=0.1):
+    def __init__(self,asset_price_file_loc, rf=0.01):
         self._asset_file_loc=asset_price_file_loc
         self._read_asset_file()
         self._calc_asset_metrics()
         self._rf = rf
+        self._asset_names = self._price_hist_df.columns
 
     def add_constraints(self, long_only = False, fully_invested=True, max_concentration=None):
         self.add_constraints_long_only = long_only
@@ -76,7 +77,7 @@ class PortfolioOptimizer:
             return [equation_1, equation_2, equation_3]
 
         CAL_params = sp.optimize.fsolve(func=system_of_equations, x0 = [self._rf, 0.2, 0.2])
-
+        return CAL_params
     def _calc_spine_for_eff_frontier(self):
         eff_fr_points = self.calc_eff_frontier()
         index_to_filter = eff_fr_points["Standard dev."].argmin()
@@ -85,9 +86,23 @@ class PortfolioOptimizer:
         cs_deriv = cs.derivative()
         return cs, cs_deriv
 
+    def plot_eff_frontier_with_cal(self):
+        eff_frontier = self.calc_eff_frontier()
+        cal_params = self.calc_CAL()
+        eff_frontier["CAL"] = cal_params[0] + eff_frontier["Standard dev."]* cal_params[1]
+        eff_frontier.plot(x="Standard dev.", y=["CAL", "index"])
+        plt.show()
+        pass
+
+    def plot_magic_carpet(self):
+        eff_frontier = self.calc_eff_frontier()
+        eff_frontier.plot(kind="bar", stacked=True, x="index", y=self)
+        plt.show()
+
 if __name__=="__main__":
     PO = PortfolioOptimizer("Price_history.csv")
     PO.add_constraints(long_only=True)
     # eff_frontier = PO.calc_eff_frontier()
     CAL = PO.calc_CAL()
+    PO.plot_eff_frontier_with_cal()
     pass
